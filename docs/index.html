@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leak Response Toolkit</title>
+    <meta
+      name="description"
+      content="Leak Response Toolkit: revisa, redacta y corrige entradas sensibles en logs, outputs y textos generados por scripts."
+    />
+    <style>
+      :root {
+        --bg: #08111f;
+        --bg-soft: #111827;
+        --panel: #0f172a;
+        --panel-2: #162033;
+        --text: #e5eefb;
+        --muted: #b4c2d5;
+        --primary: #22c55e;
+        --primary-dark: #15803d;
+        --accent: #38bdf8;
+        --danger: #f87171;
+        --border: rgba(148, 163, 184, 0.2);
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(180deg, var(--bg) 0%, #0b1220 100%);
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 20px 80px;
+      }
+
+      header {
+        padding: 18px 0 12px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #052e16;
+        font-weight: 700;
+      }
+
+      .nav {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.96rem;
+      }
+
+      .hero {
+        padding: 48px 0 18px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 0.8fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        background: rgba(56, 189, 248, 0.12);
+        color: var(--accent);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        line-height: 1.05;
+        margin: 0 0 16px;
+      }
+
+      .lead {
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.7;
+        max-width: 640px;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border-radius: 10px;
+        padding: 14px 18px;
+        font-weight: 700;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      .button:hover {
+        opacity: 0.95;
+        transform: translateY(-1px);
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--primary), #4ade80);
+        color: #052e16;
+      }
+
+      .button.secondary {
+        background: rgba(148, 163, 184, 0.08);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .hero-card {
+        background: linear-gradient(180deg, rgba(17, 24, 39, 0.95), rgba(15, 23, 42, 0.96));
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+      }
+
+      .mini-app {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(15, 23, 42, 0.95);
+        overflow: hidden;
+      }
+
+      .mini-header {
+        background: rgba(148, 163, 184, 0.08);
+        padding: 12px 16px;
+        display: flex;
+        gap: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .dot.red { background: #fb7185; }
+      .dot.yellow { background: #fbbf24; }
+      .dot.green { background: #4ade80; }
+
+      .preview {
+        padding: 20px 18px 18px;
+        font-family: Consolas, "Liberation Mono", monospace;
+        font-size: 0.9rem;
+        line-height: 1.7;
+        color: #d9e7ff;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .badge {
+        border: 1px solid var(--border);
+        background: rgba(148, 163, 184, 0.06);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.84rem;
+      }
+
+      section {
+        margin-top: 46px;
+      }
+
+      .section-title {
+        font-size: clamp(1.7rem, 3vw, 2.4rem);
+        margin: 0 0 20px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .card {
+        background: rgba(17, 24, 39, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 20px;
+      }
+
+      .card h3 {
+        margin: 0 0 10px;
+        font-size: 1.15rem;
+      }
+
+      .card p {
+        color: var(--muted);
+        line-height: 1.7;
+        margin: 0;
+      }
+
+      .downloads {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .download-item {
+        background: rgba(15, 23, 42, 0.92);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 18px;
+      }
+
+      .download-item h3 {
+        margin-top: 0;
+      }
+
+      .download-link {
+        display: inline-block;
+        margin-top: 12px;
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .code-box {
+        margin-top: 14px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        overflow-x: auto;
+      }
+
+      pre {
+        margin: 0;
+        color: #d8ecff;
+        font-size: 0.92rem;
+        line-height: 1.7;
+      }
+
+      footer {
+        margin-top: 54px;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 840px) {
+        .hero-grid,
+        .grid-3,
+        .downloads {
+          grid-template-columns: 1fr;
+        }
+
+        .nav {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="topbar">
+          <div class="brand">
+            <div class="logo">L</div>
+            <span>Leak Response Toolkit</span>
+          </div>
+          <nav class="nav" aria-label="Navegación principal">
+            <a href="#features">Características</a>
+            <a href="#downloads">Descargas</a>
+            <a href="#usage">Uso</a>
+            <a href="https://github.com/Borgie240325/leak-response-toolkit" target="_blank" rel="noreferrer">GitHub</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-grid">
+            <div>
+              <div class="eyebrow">Seguridad • Output • Calidad</div>
+              <h1>Revisa y corrige entradas sensibles antes de salir a producción.</h1>
+              <p class="lead">
+                Leak Response Toolkit ayuda a detectar, redactar y corregir contenido sensible en logs, outputs, respuestas de consola o textos generados por scripts. Diseñado para mantener un flujo seguro y legible sin perder contexto.
+              </p>
+
+              <div class="cta-row">
+                <a class="button primary" href="https://github.com/Borgie240325/leak-response-toolkit/releases/latest" target="_blank" rel="noreferrer">Descargar última versión</a>
+                <a class="button secondary" href="https://github.com/Borgie240325/leak-response-toolkit" target="_blank" rel="noreferrer">Ver repositorio</a>
+              </div>
+
+              <div class="badges" aria-label="Compatibilidad">
+                <span class="badge">Windows</span>
+                <span class="badge">macOS</span>
+                <span class="badge">Linux</span>
+                <span class="badge">GitHub Pages</span>
+              </div>
+            </div>
+
+            <div class="hero-card">
+              <div class="mini-app">
+                <div class="mini-header" aria-hidden="true">
+                  <span class="dot red"></span>
+                  <span class="dot yellow"></span>
+                  <span class="dot green"></span>
+                </div>
+                <div class="preview">
+                  <div><span class="muted">$</span> python -m leak_response_toolkit.cli --input sample.txt</div>
+                  <div>password=supersecret</div>
+                  <div>Authorization: Bearer abc123token</div>
+                  <div>user@example.com</div>
+                  <div>→</div>
+                  <div>password=***</div>
+                  <div>Authorization=Bearer ***</div>
+                  <div>user@***.com</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="features">
+          <h2 class="section-title">Características principales</h2>
+          <div class="grid-3">
+            <article class="card">
+              <h3>Detección automática</h3>
+              <p>Identifica patrones sensibles como contraseñas, tokens, API keys, emails y cabeceras de autenticación.</p>
+            </article>
+            <article class="card">
+              <h3>Redacción segura</h3>
+              <p>Reemplaza valores críticos por marcadores legibles como *** para evitar fugas en salida, logs o reportes.</p>
+            </article>
+            <article class="card">
+              <h3>Uso sencillo</h3>
+              <p>Se puede ejecutar desde CLI, desde scripts o integrarse fácilmente en flujos de validación y revisión.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="downloads">
+          <h2 class="section-title">Descarga para todos los equipos</h2>
+          <div class="downloads">
+            <article class="download-item">
+              <h3>Windows</h3>
+              <p>Paquete listo para uso en equipos con Windows.</p>
+              <a class="download-link" href="https://github.com/Borgie240325/leak-response-toolkit/releases/latest" target="_blank" rel="noreferrer">Descargar Windows</a>
+            </article>
+
+            <article class="download-item">
+              <h3>macOS</h3>
+              <p>Versión compatible para equipos Apple en entorno Unix.</p>
+              <a class="download-link" href="https://github.com/Borgie240325/leak-response-toolkit/releases/latest" target="_blank" rel="noreferrer">Descargar macOS</a>
+            </article>
+
+            <article class="download-item">
+              <h3>Linux</h3>
+              <p>Archivo portable para ejecución en sistemas GNU/Linux.</p>
+              <a class="download-link" href="https://github.com/Borgie240325/leak-response-toolkit/releases/latest" target="_blank" rel="noreferrer">Descargar Linux</a>
+            </article>
+          </div>
+        </section>
+
+        <section id="usage">
+          <h2 class="section-title">Uso rápido</h2>
+          <div class="code-box">
+            <pre>python -m leak_response_toolkit.cli --input sample.txt
+
+# o desde stdin
+cat sample.txt | python -m leak_response_toolkit.cli</pre>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        Leak Response Toolkit · GitHub Pages · GitHub Releases · Seguridad y calidad de salida
+      </footer>
+    </div>
+  </body>
+</html>
